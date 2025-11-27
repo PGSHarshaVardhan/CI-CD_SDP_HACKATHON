@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
 
   mysqldb:
@@ -7,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: inventory_management
     ports:
-      - "3307:3306"
+      - "3307:3306"     # host:container
     networks:
       - springboot-mysql-net
     healthcheck:
@@ -21,10 +23,21 @@ services:
     image: pgsharshavardhan/docker-backend-project:latest
     container_name: springboot
     ports:
-      - "2025:2000"
+      - "2025:2000"     # host:container
     depends_on:
       mysqldb:
         condition: service_healthy
+    networks:
+      - springboot-mysql-net
+    restart: on-failure
+
+  frontend:
+    image: pgsharshavardhan/docker-frontend-project:latest
+    container_name: react
+    ports:
+      - "3000:80"        # host:container
+    depends_on:
+      - backend
     networks:
       - springboot-mysql-net
     restart: on-failure
