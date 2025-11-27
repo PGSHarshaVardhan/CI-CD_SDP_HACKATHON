@@ -1,4 +1,5 @@
 services:
+
   mysqldb:
     image: mysql:8
     container_name: mysql-db
@@ -7,10 +8,14 @@ services:
       MYSQL_DATABASE: inventory_management
     ports:
       - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
       - springboot-mysql-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 6
+      start_period: 25s
 
   backend:
     image: pgsharshavardhan/docker-backend-project:latest
@@ -18,24 +23,11 @@ services:
     ports:
       - "2025:2000"
     depends_on:
-      - mysqldb
-    restart: on-failure
+      mysqldb:
+        condition: service_healthy
     networks:
       - springboot-mysql-net
-
-  frontend:
-    image: pgsharshavardhan/docker-frontend-project:latest
-    container_name: react
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
     restart: on-failure
-    networks:
-      - springboot-mysql-net
-
-volumes:
-  mysql_data:
 
 networks:
   springboot-mysql-net:
