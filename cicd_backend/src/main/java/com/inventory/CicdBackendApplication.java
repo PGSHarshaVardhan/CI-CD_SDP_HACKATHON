@@ -8,6 +8,7 @@ public class CicdBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CicdBackendApplication.class, args);
+		System.out.println("Backend is running");
 	}
 
 }
