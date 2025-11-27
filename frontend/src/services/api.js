@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // Use relative base URL so React proxy forwards to the backend (set in package.json)
-const API_BASE_URL = '/api';
+const API_BASE_URL = '/http://springboot:2000/api';
+
 
 // Create axios instance with default config
 const api = axios.create({
