@@ -4,7 +4,15 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
+
 COPY . .
+
+# 🔥 Add these 3 lines to fix exit code 126
+RUN apk add --no-cache dos2unix
+RUN find . -type f -exec dos2unix {} \;
+RUN chmod -R +x .
+
+# Build
 RUN npm run build
 
 # Stage 2: Serve production
